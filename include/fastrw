@@ -1,0 +1,6 @@
+#ifndef FASTRW_H
+#define FASTRW_H
+
+#include <fastrw_bits/FastRW.hpp>
+
+#endif // FASTRW_H
