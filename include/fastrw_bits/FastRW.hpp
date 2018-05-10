@@ -122,7 +122,7 @@ protected:
 		std::complex<double> Ey = Ey_f(alpha,beta);
 
 		std::vector<std::complex<double>> field_values(6);
-		std::complex<double>              phase = std::exp(1i*k*z*cosAlpha)*std::exp(1i*k*r*sinAlpha*std::cos(th-beta));
+		std::complex<double>              phase = std::exp(-1i*k*z*cosAlpha)*std::exp(1i*k*r*sinAlpha*std::cos(th-beta));
 
 		field_values[0] = q_f(alpha)*(Ex*(cosAlpha*cosBetaSq+sinBetaSq)+Ey*cosBeta*sinBeta*(cosAlpha-1));
 		field_values[1] = q_f(alpha)*(Ex*cosBeta*sinBeta*(cosAlpha-1.0)+Ey*(cosAlpha*sinBetaSq+cosBetaSq));

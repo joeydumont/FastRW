@@ -2,6 +2,7 @@
 #include <cuba.h>
 #include <boost/math/constants/constants.hpp>
 #include <armadillo>
+#include <cmath>
 
 using namespace FastRW;
 
@@ -15,11 +16,11 @@ const double UNIT_E_FIELD   = 1.3e18;
 const double UNIT_B_FIELD   = UNIT_E_FIELD/SPEED_OF_LIGHT;
 const double UNIT_MASS      = 9.109382914e-31;
 
-const double f           = 0.04375/UNIT_LENGTH;
-const double w0          = 0.075/UNIT_LENGTH;
+const double f           = FOCAL/UNIT_LENGTH;
+const double rmax        = 0.08750/UNIT_LENGTH;
+const double w0          = 0.07500/UNIT_LENGTH;
 const double lamb        = 800.0e-9/UNIT_LENGTH;
 const double k           = 2.0*pi/lamb;
-const double alpha_max   = pi/2.0;
 
 std::complex<double> Ex(double alpha, double beta)
 {
@@ -38,6 +39,12 @@ double q(double alpha)
 
 int main(int argc, char* argv[])
 {
+    double alpha_max;
+
+    if (2.0*f <= rmax)
+        alpha_max   = pi-atan(4.0*f*rmax/(rmax*rmax-4.0*f*f));
+    else
+        alpha_max   = atan(4.0*f*rmax/(std::abs(rmax*rmax-4.0*f*f)));
 	RichardsWolf hna_parabola_lin = RichardsWolf(&Ex,&Ey,&q,alpha_max,k);
 
 	auto r = arma::linspace(0.0,2.5e-6/UNIT_LENGTH, 100);
@@ -57,9 +64,11 @@ int main(int argc, char* argv[])
 	{
 		std::stringstream file_name;
 		file_name << "field-component-" << i << ".txt";
-		arma::mat field_abs = arma::abs(field.slice(i));
-		field_abs.save(file_name.str().c_str(), arma::arma_ascii);
+	       	field.slice(i).save(file_name.str().c_str(), arma::arma_ascii);
 	}
+
+	r.save("r_fastrw.txt", arma::arma_ascii);
+	th.save("th_fastrw.txt", arma::arma_ascii);
 
 	return 0;
 }
